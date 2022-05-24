@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { createService } from "../controllers/createService";
+import { scheduleService } from "../controllers/scheduleService";
 
 export const router = Router();
 
 router.post('/', function(req, res) {
-    createService(req, res);
+    scheduleService(req, res);
 });
