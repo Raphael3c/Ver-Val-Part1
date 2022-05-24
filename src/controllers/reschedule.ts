@@ -1,8 +1,9 @@
-import { Schema, model, connect, mongo, models } from 'mongoose';
-import { IService} from "../models/Service";
+import { Schema, model, mongo, models } from 'mongoose';
+import { IService } from "../models/Service";
+import { Request, Response } from "express";
 import "dotenv/config";
 
-export const reschedule = async (req: any, res: any) => {
+export const reschedule = async (req: Request, res: Response) => {
 	const serviceSchema = new Schema<IService>({
 		taxId: String,
 		serviceName: String,
