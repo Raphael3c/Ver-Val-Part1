@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { reschedule } from "../controllers/reschedule";
+import { createService } from "../controllers/createService";
 
 export const router = Router();
 
 router.post('/', function(req, res) {
-    reschedule(req, res);
+    createService(req, res);
 });

@@ -1,6 +1,8 @@
 export interface IService {
     taxId: string;
-    serviceName: string;
-    employeeId: number;
-    date: string;
+    employeeName: string;
+    description: string;
+    value: number;
+    duration: number;
+    dateRegistered: string;
 }
