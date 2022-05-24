@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { scheduleService } from "../controllers/scheduleService";
+import { processorPayment } from "../controllers/processorPayment";
 
 export const router = Router();
 
 router.post('/', function(req, res) {
-    scheduleService(req, res);
+    processorPayment(req, res);
 });
