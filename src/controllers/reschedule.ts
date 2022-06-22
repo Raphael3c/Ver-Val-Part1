@@ -5,8 +5,8 @@ import "dotenv/config";
 import { validateTax } from '../utils/validateTax';
 
 export const reschedule = async (req: Request, res: Response) => {
-
-	if(validateTax(req.body.taxId)){
+	console.log(req.body)
+	if(!validateTax(req.body.taxId)){
 		res.end(JSON.stringify({Success: false, mensage: "Cpf invalido"}))
 		return
 	}
