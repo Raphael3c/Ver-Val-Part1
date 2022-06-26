@@ -23,6 +23,13 @@ export const createService = async (req: Request, res: Response) => {
   
   const createdServices = models.createdservices || model<IService>('createdservices', serviceSchema)
   
+  const serviceAlreadyExists = await createdServices.findOne({taxId: req.body.taxId, description: req.body.description})
+
+  if(serviceAlreadyExists){
+    res.end(JSON.stringify({Success: false, mensage: "Serviço já cadastrado pelo funcionário"}))
+    return
+  }
+
   const data: IService = {
     taxId: req.body.taxId,
     employeeName: req.body.employeeName,
