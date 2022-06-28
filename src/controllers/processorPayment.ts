@@ -2,6 +2,8 @@ import { Schema, models, model, mongo } from 'mongoose'
 import { ObjectId } from "mongodb";
 import { IProcessorPayment } from '../models/ProcessorPayment'
 import { Request, Response } from 'express'
+import { validateTax } from '../utils/validateTax'
+import cardValidator from 'card-validator'
 import 'dotenv/config'
 
 export const processorPayment = async (req: Request, res: Response) => {
@@ -16,14 +18,22 @@ export const processorPayment = async (req: Request, res: Response) => {
     transactionId: Number,
 	})
 
-  const scheduledServices = models.Service || model<IProcessorPayment>('paidServices', serviceSchema)
+  const paidServices = models.paidServices || model<IProcessorPayment>('paidServices', serviceSchema)
+  
   try{
     const data: IProcessorPayment = {
-      holderCardNumber: req.body.taxId,
-      holderCVV: req.body.serviceName,
-      holderCardExpireDate: req.body.employeeId,
-      holderTaxId: req.body.date,
+      holderCardNumber: String(req.body.holderCardNumber).trim(),
+      holderCVV: req.body.holderCVV,
+      holderCardExpireDate: req.body.holderCardExpireDate,
+      holderTaxId: req.body.holderTaxId,
     }
+
+    if(!(cardValidator.number(data.holderCardNumber).isValid))
+      throw Error("Número do cartão inválido")
+    
+
+    if(!validateTax(req.body.holderTaxId))
+      throw Error("CPF inválido")
 
     const response = await passToProcessor(data, "1");
 
@@ -35,11 +45,11 @@ export const processorPayment = async (req: Request, res: Response) => {
     data.serviceToPay = new mongo.ObjectId(req.body.serviceToPay)
     data.transactionId = response.transactionId
     
-    scheduledServices.create(data);
+    paidServices.create(data)
   
-    res.end(JSON.stringify(data))
-  }catch(mensageError){
-    res.end(JSON.stringify({Success: false, Mensage: mensageError}))
+    res.end(JSON.stringify({Success: true, message: 'Pagamento Efetuado com sucesso'}))
+  }catch(e: any){
+    res.end(JSON.stringify({Success: false, message: e.message}))
   }
 }
 
