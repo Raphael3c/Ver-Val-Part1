@@ -30,7 +30,6 @@ export const processorPayment = async (req: Request, res: Response) => {
 
     if(!(cardValidator.number(data.holderCardNumber).isValid))
       throw Error("Número do cartão inválido")
-    
 
     if(!validateTax(req.body.holderTaxId))
       throw Error("CPF inválido")
